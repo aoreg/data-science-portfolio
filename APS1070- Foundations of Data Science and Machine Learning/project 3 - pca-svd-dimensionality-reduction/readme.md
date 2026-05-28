@@ -1,4 +1,4 @@
-# Global GDP & US Electricity: Dimensionality Reduction with PCA and SVD
+# Global GDP & US Electricity: Dimensionality Reduction with PCA and SVD 
 
 **Dataset 1:** World GDP — 179 countries × 52 years (1970–2021)
 **Dataset 2:** US Electricity Sales — 62 states × 24 years (2001–2024)
