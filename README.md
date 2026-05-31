@@ -11,7 +11,6 @@ Graduate coursework and independent projects in data science at the University o
 | [APS1070](./APS1070) | Foundations of Data Analytics & Machine Learning | Fall 2024 |
 | [MIE1624](./MIE1624) | Introduction to Data Science & Analytics | Fall 2024 |
 | [MIE1628](./MIE1628) | Cloud Analytics | Fall 2025 |
-| [APS1050](./APS1050) | Blockchain & Bitcoin | Fall 2025 |
 
 ---
 
