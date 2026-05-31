@@ -28,7 +28,7 @@ Graduate coursework and independent projects in data science at the University o
 - Group project: PCA and clustering
 
 **MIE1628**
-- Three assignments covering cloud data pipelines, distributed querying, and cloud ML workflows
+- Five assignments covering cloud data pipelines, distributed querying, and cloud ML workflows
 
 **Independent**
 - Bank marketing classification (term deposit prediction)
