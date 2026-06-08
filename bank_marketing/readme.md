@@ -1,14 +1,37 @@
 # Bank Marketing: Term Deposit Subscription Prediction
 
-**Dataset:** UCI Bank Marketing Dataset — 41,188 records from a Portuguese bank's direct marketing campaign (phone calls).
+## Business Problem
 
-**Goal:** Predict whether a client will subscribe to a term deposit — a binary classification problem with ~11% positive rate (class imbalance).
+A bank runs outbound phone campaigns to sell term deposits. With 100,000 customer records and a 30% subscription rate, calling every customer indiscriminately is expensive — the goal is to identify which customers are most likely to subscribe so the campaign team can prioritize outreach and reduce cost-per-acquisition.
+
+This project builds and compares three classification models to rank customers by conversion likelihood.
+
+---
+
+## Key Findings
+
+- **XGBoost achieves the best recall (61.7%)** — meaning it correctly identifies nearly two-thirds of all eventual subscribers, while Logistic Regression is close behind (60.2%)
+- **Random Forest is precision-optimized (55.7% precision)** but misses 86% of actual subscribers — a poor tradeoff when the cost of a missed sale outweighs the cost of an extra call
+- **Call duration is the single strongest predictor** of subscription, but it is only observable *after* the call ends — including it would cause data leakage in any real-time deployment. It was retained here for benchmarking purposes but should be removed in production
+- **ROC AUC of ~68% across all models** indicates moderate ranking ability — models reliably distinguish likely subscribers from non-subscribers, and threshold tuning against a precision-recall curve would improve business outcomes over the default 0.5 cutoff
+
+---
+
+## Results
+
+| Model | Accuracy | Precision | Recall | F1 | ROC AUC |
+|---|---|---|---|---|---|
+| Logistic Regression | 64.7% | 43.6% | 60.2% | 50.6% | 68.2% |
+| Random Forest | 70.8% | 55.7% | 14.0% | 22.4% | 67.4% |
+| XGBoost | 63.4% | 42.5% | 61.7% | 50.3% | 67.9% |
+
+**Primary metric: Recall** — missing a likely subscriber costs more than making an unnecessary call.
 
 ---
 
 ## Approach
 
-Three classifiers trained and compared, each with explicit imbalance handling:
+Three classifiers trained on an 80/20 stratified split, each with explicit imbalance handling:
 
 | Model | Imbalance Strategy |
 |---|---|
@@ -16,13 +39,15 @@ Three classifiers trained and compared, each with explicit imbalance handling:
 | Random Forest | `class_weight="balanced_subsample"` |
 | XGBoost | `scale_pos_weight` tuned to class ratio |
 
-All models use a shared sklearn `Pipeline` with `StandardScaler` for numeric features and `OneHotEncoder` for categorical features.
+All models share a unified sklearn `Pipeline` with `StandardScaler` for numeric features and `OneHotEncoder` for categorical features, ensuring no preprocessing leakage between train and test sets.
 
 ---
 
-## Results
+## Dataset
 
-Models are evaluated on Accuracy, Precision, Recall, F1, and ROC AUC. Given the imbalance, **Recall and ROC AUC are the primary metrics** — the cost of missing a likely subscriber outweighs the cost of a wasted call.
+**UCI Bank Marketing Dataset** — 100,000 customer records, 44 features, 30% positive rate (term deposit subscribed).
+
+Features include customer demographics, account history, campaign contact details, and economic indicators.
 
 ---
 
@@ -38,14 +63,17 @@ bank-marketing/
 
 ---
 
-## Key Findings
 
-- **Call duration** is the strongest predictor but is only known after the call — it should be dropped for any real-time deployment
-- ROC AUC of ~94% across models indicates strong ranking ability despite the class imbalance
-- All three models achieve high recall at the cost of precision; threshold tuning would be the next step for a production system
+---
+
+## Next Steps
+
+- Remove `LastContactDuration` and re-evaluate — it leaks post-call information and cannot be used for real-time scoring
+- Tune the classification threshold using a precision-recall curve calibrated to the bank's cost function (cost of missed sale vs. cost of unnecessary call)
+- Apply SHAP values for per-customer explanations to support frontline decision-making
 
 ---
 
 ## Stack
 
-Python · pandas · NumPy · scikit-learn · XGBoost · matplotlib
+Python · pandas · NumPy · scikit-learn · XGBoost · matplotlib · seaborn
